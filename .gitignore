@@ -1,0 +1,45 @@
+# === 系統與編輯器暫存檔 ===
+*.swp
+*.bak
+*.tmp
+*.log
+*.swo
+.DS_Store
+Thumbs.db
+
+# === Shell history / cache ===
+*.sh~
+.history
+.cache
+
+# === Docker 容器資料 ===
+/opt/pxc01/var_lib_mysql/*
+/opt/pxc01/var_log/*
+*.pid
+*.sock
+
+# === 本地測試網站資料 ===
+/var/www/html/index.php
+
+# === 環境變數設定（若未來採用） ===
+.env
+.env.*
+
+# === 部署日誌與輸出 ===
+*.out
+*.err
+nohup.out
+
+# === Docker 构建產物或掛載卷 ===
+docker-compose.override.yml
+docker-compose.override.local.yml
+
+# === IDE 專案設定檔 ===
+.vscode/
+.idea/
+.project
+*.iml
+
+# === 你部署流程產生的中繼資料（可視情況調整） ===
+/web-tools-demo/mysql-docker-compose.yml.backup
+/checks/
