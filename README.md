@@ -35,13 +35,18 @@ web-tools-demo/
 │  ├─macvlan.sh            # 建置docker的macvlan腳本
 │  ├─backup_mysql.sh       # 備份資料庫腳本
 │  └─show_info.sh          # 顯示系統資訊腳本
-├─ nginx_sample.conf       # 範例 nginx 設定
-├─ env.example             # 範例 env設定
-├─ iptables.example        # 範例 iptables設定
-├─ mysql-docker-compose.yml # 範例 node01的docker-compose設定
+├─ example                 # 範例目錄 
+│  ├─nginx_sample.conf     # 範例 nginx 設定
+│  ├─env.example           # 範例 env設定
+│  ├─iptables.example      # 範例 iptables設定
+│  ├─mysql-docker-compose.yml # 範例 node01的docker-compose設定
+│  ├─my_example.cnf        # 範例 node01的my.cnf設定
+│  └─node_example.cnf      # 範例 node01的node.cnf設定
 ├─ backup/                 # 備份目錄
 ├─ docs/                   # 教學文檔（可另放 PDF 或影片）
+├─ RELEASE.md
 └─ README.md
+
 ```
 
 ## 📁 安裝前準備
@@ -95,6 +100,17 @@ bash ./web-tools-demo/install/deploy_04.sh
 - 使用 docker-compose 啟動 MySQL 容器
 - 顯示目前容器狀態與 logs 檢查（含 wsrep 狀態）
 
+### 第六步：重新啟動服務器與清理部屬腳本
+```bash
+rm -rf /root/web-tools-demo
+reboot
+```
+- 🔄 重啟伺服器 以使 SELinux、system.conf、sysctl 等設定生效。
+- 🧹 清理部署腳本 可避免日後誤觸、重複執行或外洩敏感配置。
+- 📁 日常維運腳本 已自動複製至 /opt/scripts/，可直接使用。
+
+
+### 日常診斷與注意事項
 🩺 環境檢查與日常診斷
 ```bash
 bash ./web-tools-demo/scripts/check_env.sh
@@ -107,9 +123,38 @@ bash ./web-tools-demo/scripts/check_env.sh
 
 📌 <red>注意事項</red>
 
-- <red>docker-compose.yml 中的 `__REPLACE_WITH_INTERFACE__` 會由腳本自動替換</red>
-- <red>若部署多節點，請取消註解 CLUSTER_JOIN 並移除 --wsrep-new-cluster</red>
-- <red>deploy_04.sh 啟動為單節點，僅供開發與驗證用途</red>
+- docker-compose.yml 中的 `__REPLACE_WITH_INTERFACE__` 會由腳本自動替換
+- 若部署多節點，請取消註解 CLUSTER_JOIN 並移除 --wsrep-new-cluster
+- deploy_04.sh 啟動為單節點，僅供開發與驗證用途
+
+📌 <red>加入叢集注意事項（PXC 多節點部署）</red>
+
+Percona 官方映像檔不會自動將 `CLUSTER_JOIN` 環境變數套用進 `node.cnf`，請根據節點角色調整：
+#### Node01（第一節點）
+```yaml
+environment:
+  - CLUSTER_JOIN=
+此時 node.cnf的wsrep_cluster_address 會為空（gcomm://），代表建立新叢集。
+```
+
+#### Node02+（加入叢集的節點）
+```yaml
+environment:
+  - CLUSTER_JOIN=192.168.1.25
+```
+請手動指定第一節點 IP，必要時可加入多個節點做容錯：
+```yaml
+  - CLUSTER_JOIN=192.168.1.25,192.168.1.26
+```
+
+你也可以手動編輯 /opt/pxc02/etc/mysql/node.cnf(依環境需求調整)：
+```
+server_id = 每台節點要不同
+wsrep_node_address = 本節點實際IP
+wsrep_node_incoming_address = 本節點實際IP:3306
+wsrep_cluster_address = gcomm://指向 node01 IP(或其他多節點IP)
+```
+⚠️ 若自行設定 node.cnf，請確保容器有對應 volume 掛載並 reload 後啟動。
 
 
 📚 後續建議擴充

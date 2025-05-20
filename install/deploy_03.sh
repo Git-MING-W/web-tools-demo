@@ -15,9 +15,20 @@ chown -R mysql:mysql /opt/pxc01/var_lib_mysql
 chown -R mysql:mysql /opt/pxc01/var_log
 chown -R mysql:mysql /opt/pxc01/etc
 
-# 3. 複製 docker-compose.yml
-echo "📄 複製 docker-compose.yml 至 /opt/pxc01..."
-cp ./web-tools-demo/mysql-docker-compose.yml /opt/pxc01/docker-compose.yml
+# 3. 複製 pxc設定
+echo "📄 複製 pxc容器設定 至 /opt/pxc01..."
+if [ ! -f /opt/pxc01/etc/my.cnf ]; then
+  cp ./web-tools-demo/example/my_example.cnf /opt/pxc01/etc/my.cnf
+else
+  echo "⚠️ /opt/pxc01/etc/my.cnf 已存在，略過複製"
+fi
+
+if [ ! -f /opt/pxc01/etc/mysql/node.cnf ]; then
+  cp ./web-tools-demo/example/node_example.cnf /opt/pxc01/etc/mysql/node.cnf
+else
+  echo "⚠️ /opt/pxc01/etc/mysql/node.cnf 已存在，略過複製"
+fi
+cp ./web-tools-demo/example/mysql-docker-compose.yml /opt/pxc01/docker-compose.yml
 
 # 4. 自動取得第二張網卡名稱
 echo "🌐 偵測第二張網卡名稱..."

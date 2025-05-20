@@ -34,7 +34,7 @@ systemctl start docker
 # 3. 建立 /opt/scripts 並複製 macvlan.sh
 echo "📁 建立 /opt/scripts 並複製 macvlan.sh..."
 mkdir -p /opt/scripts
-cp ./web-tools-demo/scripts/* /opt/scripts/*
+cp ./web-tools-demo/scripts/* /opt/scripts/
 chmod +x /opt/scripts/*.sh
 
 # 4. 設定 macvlan.sh 開機啟動
@@ -45,7 +45,13 @@ chmod +x /etc/rc.d/rc.local
 # 5. 關閉 SELinux
 echo "🛡️ 關閉 SELinux 並設為 disabled..."
 setenforce 0
-sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/sysconfig/selinux
+SELINUX_CFG="/etc/sysconfig/selinux"
+if [ -f /etc/selinux/config ]; then
+  SELINUX_CFG="/etc/selinux/config"
+fi
+
+sed -i 's/^SELINUX=.*/SELINUX=disabled/' "$SELINUX_CFG"
+echo "✅ SELinux 設定為 disabled（請重新開機以生效）"
 
 # 6. 安裝 ipset 並啟用
 echo "📦 安裝 ipset 並啟用..."
