@@ -95,4 +95,8 @@ iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
 #iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 36888 -j ACCEPT
 iptables -A INPUT -j REJECT --reject-with icmp-host-prohibited
 
+
+echo "💾 儲存 iptables 規則"
+service iptables save
+
 echo "✅ 第二階段部署完成"

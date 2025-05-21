@@ -1,0 +1,45 @@
+# 注意事項：
+# 1. 執行前請將 __REPLACE_WITH_INTERFACE__ 替換為實體網卡名（ex: enp0s8）
+# 2. 啟用 CLUSTER_JOIN 時請取消註解，並修改為對應的節點 IP
+# 3. 僅第一次啟用容器並為第一個節點，否則請註解command: --wsrep-new-cluster
+services:
+  pxc1:
+    image: percona/percona-xtradb-cluster:8.0.36 
+    restart: always
+    container_name: node01
+    privileged: true
+    environment:
+      - MYSQL_ROOT_PASSWORD=P@ssW0rd
+      - CLUSTER_NAME=pxc_cluster
+      #- CLUSTER_JOIN=192.168.1.26
+    volumes:
+      - ./var_lib_mysql:/var/lib/mysql
+      - ./var_log:/var/log/mysql
+      - ./etc/mysql/:/etc/mysql/
+      - ./etc/my.cnf.d:/etc/my.cnf.d
+      - /etc/localtime:/etc/localtime:ro
+    extra_hosts:
+      - "node01.hys.lan:192.168.1.25"
+      - "node02.hys.lan:192.168.1.26"
+      - "node03.hys.lan:192.168.1.27"
+    ports:
+      - "3306:3306"
+      - "4567:4567"
+      - "4568:4568"
+      - "4444:4444"
+    command: --wsrep-new-cluster
+    networks:
+      vlan0001:
+        ipv4_address: 192.168.1.25
+networks:
+  vlan0001:
+    name: vlan0001
+    driver: macvlan
+    driver_opts:
+      parent: __REPLACE_WITH_INTERFACE__
+    ipam:
+      config:
+        - subnet: "192.168.1.0/24"
+          ip_range: "192.168.1.0/24"
+          gateway: "192.168.1.2"
+    external: true

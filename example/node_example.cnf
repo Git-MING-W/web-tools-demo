@@ -1,0 +1,45 @@
+[mysqld]
+max_connections = 60000
+default_authentication_plugin=mysql_native_password
+character-set-server=utf8mb4
+collation-server=utf8mb4_general_ci
+datadir=/var/lib/mysql
+socket=/tmp/mysql.sock
+skip-host-cache
+log-error=/var/log/mysql/error.log
+log_error_suppression_list='MY-013360'
+slow_query_log = ON
+slow_query_log_file = /var/log/mysql/slow.log
+pxc_encrypt_cluster_traffic = OFF
+pxc_strict_mode=PERMISSIVE
+sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
+innodb_file_per_table=1
+explicit_defaults_for_timestamp=0
+skip_name_resolve
+#coredumper
+server_id=1
+binlog_format=ROW
+default_storage_engine=InnoDB
+
+innodb_flush_log_at_trx_commit  = 2
+innodb_flush_method             = O_DIRECT
+innodb_file_per_table           = 1
+innodb_autoinc_lock_mode=2
+
+bind-address = 0.0.0.0
+
+wsrep_slave_threads=2
+wsrep_cluster_address=gcomm://
+wsrep_provider=/usr/lib64/galera4/libgalera_smm.so
+
+wsrep_cluster_name=pxc_cluster
+wsrep_node_address=192.168.1.25
+wsrep_node_incoming_address=192.168.1.25:3306
+
+wsrep_sst_method=xtrabackup-v2
+
+[client]
+socket=/tmp/mysql.sock
+
+[sst]
+progress=/var/lib/mysql/sst_in_progress

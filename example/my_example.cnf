@@ -1,0 +1,3 @@
+!include /etc/mysql/node.cnf
+!includedir /etc/my.cnf.d/
+!includedir /etc/percona-xtradb-cluster.conf.d/
