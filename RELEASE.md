@@ -6,8 +6,8 @@
 
 ## 🔖 版本資訊
 
-- **版本名稱**：v1.0.1
-- **發佈日期**：2025/05/21
+- **版本名稱**：v1.0.2
+- **發佈日期**：2025/05/22
 - **開發者**：MING-W
 - **適用環境**：CentOS 7 / 8 / Rocky Linux 8+
 - **部署方式**：Shell Script + docker-compose
@@ -25,6 +25,8 @@ web-tools-demo/
 │  ├─check_env.sh          # 環境檢查與日常診斷腳本
 │  ├─macvlan.sh            # 建置docker的macvlan腳本
 │  ├─backup_mysql.sh       # 備份資料庫腳本
+│  ├─only_apply_ssl.sh     # 申請證書腳本
+│  ├─auto_apply_ssl.sh     # 自動化申請證書及替換腳本 
 │  └─show_info.sh          # 顯示系統資訊腳本
 ├─ example                 # 範例目錄 
 │  ├─nginx_sample.conf     # 範例 nginx 設定
@@ -32,7 +34,12 @@ web-tools-demo/
 │  ├─iptables.example      # 範例 iptables設定
 │  ├─mysql-docker-compose.yml # 範例 node01的docker-compose設定
 │  ├─my_example.cnf        # 範例 node01的my.cnf設定
+│  ├─cache_zones.conf      # proxy cache緩衝區設定
 │  └─node_example.cnf      # 範例 node01的node.cnf設定
+├─ conf/                   # nginx conf設定範本
+│  ├─ default.conf         # 預設頁
+│  ├─ localhost.conf       # 檢測狀態頁面
+│  └─ php_info.conf        # php資訊
 ├─ backup/                 # 備份目錄
 ├─ docs/                   # 教學文檔（可另放 PDF 或影片）
 ├─ RELEASE.md
@@ -41,26 +48,20 @@ web-tools-demo/
 
 ---
 
-🆕 本版變更摘要（v1.0.1）
+🆕 本版變更摘要（v1.0.2）
 
-✅ `show_info.sh` 增加以下檢查功能：
-  - 顯示網卡名稱與 IP 資訊
-  - 檢查常見服務埠（80, 443, 3306, 9000）是否啟用
+✅ `deploy_01.sh` 中增加初始化nginx環境配置：
+  - 加入`default`、`localhost`、`php_info`站點配置
+  - 優化nginx.conf配置
+  - 加入`cache_zones`配置
 
-✅ `deploy_02.sh` 中強化 SELinux 處理：
-  - 同時支援 `/etc/selinux/config` 與 `/etc/sysconfig/selinux`
-  - 加入當前狀態判斷與提示
+✅ `deploy_02.sh` 中新增：
+  - 補正iptable設定沒存檔問題
 
-✅ `deploy_03.sh` 中新增：
-  - 自動複製 `example/my_example.cnf` 為 `my.cnf`
-  - 自動複製 `example/node_example.cnf` 為 `node.cnf`
-  - 自動取代介面名稱與執行 `macvlan.sh` 並檢查結果
+✅ 新增`apply_ssl_domain.sh`腳本：
+  - 新增`apply_ssl_domain.sh`腳本可用容器化的方式申請Let's Encrypt證書
 
-✅ `README.md` 增補第六步：
-  - 部署完成後需 `reboot` 才能使系統參數生效
-  - 清理 `/root/web-tools-demo` 腳本目錄以防外洩或誤操作
-
-✅ `RELEASE.md` 補充 v1.0.1 變更紀錄
+✅ `RELEASE.md` 補充 v1.0.2 變更紀錄
 
 ---
 📌 發佈注意事項（續）

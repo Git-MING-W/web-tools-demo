@@ -34,6 +34,14 @@ else
   echo "✅ 已建立使用者 mysql (UID 1001)"
 fi
 
+# 檢查 www-data 使用者是否存在
+if id www-data &>/dev/null; then
+  echo "✅ 使用者 www-data 已存在，UID: $(id -u www-data), GID: $(id -g www-data)"
+else
+  useradd -u 33 -g 33 -r -s /sbin/nologin www-data
+  echo "✅ 已建立使用者 www-data (UID 33)"
+fi
+
 # 3a. 設定 /etc/systemd/system.conf 系統限制參數
 echo "📝 設定 system.conf 系統限制參數..."
 sed -i '/^DefaultLimitCORE=/d' /etc/systemd/system.conf
@@ -100,8 +108,20 @@ yum install -y nginx
 
 # 8. 建立網站首頁
 echo "📁 建立網站根目錄與首頁..."
-mkdir -p /var/www/html
-echo "<?php phpinfo(); ?>" > /var/www/html/index.php
+# 建立資料夾
+mkdir -p /var/cache/nginx/wp
+mkdir -p /var/cache/nginx/api
+mkdir /etc/nginx/snippets/
+mkdir -p /var/www/html/php
+
+# 將 conf/ 下的設定檔複製到 Nginx 設定目錄
+echo "<?php phpinfo(); ?>" > /var/www/html/php/index.php
+cp ./web-tools-demo/example/nginx-sample.conf /etc/nginx/nginx.conf
+cp ./web-tools-demo/example/cache_zones.conf /etc/nginx/snippets/
+cp ./web-tools-demo/conf/*.conf /etc/nginx/conf.d/
+
+# 設定own
+chown -R nginx:nginx /var/cache/nginx
 chown -R nginx:nginx /var/www/html
 
 systemctl start nginx

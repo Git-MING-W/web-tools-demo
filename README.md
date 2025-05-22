@@ -34,6 +34,8 @@ web-tools-demo/
 │  ├─check_env.sh          # 環境檢查與日常診斷腳本
 │  ├─macvlan.sh            # 建置docker的macvlan腳本
 │  ├─backup_mysql.sh       # 備份資料庫腳本
+│  ├─only_apply_ssl.sh     # 申請證書腳本
+│  ├─auto_apply_ssl.sh     # 自動化申請證書及替換腳本 
 │  └─show_info.sh          # 顯示系統資訊腳本
 ├─ example                 # 範例目錄 
 │  ├─nginx_sample.conf     # 範例 nginx 設定
@@ -41,7 +43,12 @@ web-tools-demo/
 │  ├─iptables.example      # 範例 iptables設定
 │  ├─mysql-docker-compose.yml # 範例 node01的docker-compose設定
 │  ├─my_example.cnf        # 範例 node01的my.cnf設定
+│  ├─cache_zones.conf      # proxy cache緩衝區設定
 │  └─node_example.cnf      # 範例 node01的node.cnf設定
+├─ conf/                   # nginx conf設定範本
+│  ├─ default.conf         # 預設頁
+│  ├─ localhost.conf       # 檢測狀態頁面
+│  └─ php_info.conf        # php資訊
 ├─ backup/                 # 備份目錄
 ├─ docs/                   # 教學文檔（可另放 PDF 或影片）
 ├─ RELEASE.md
@@ -113,7 +120,7 @@ reboot
 ### 日常診斷與注意事項
 🩺 環境檢查與日常診斷
 ```bash
-bash ./web-tools-demo/scripts/check_env.sh
+bash /opt/scripts/check_env.sh
 ```
 檢查內容包括：
 - 主機設定（hostname、timezone）

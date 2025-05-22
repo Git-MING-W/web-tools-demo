@@ -31,8 +31,8 @@ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 systemctl enable docker
 systemctl start docker
 
-# 3. 建立 /opt/scripts 並複製 macvlan.sh
-echo "📁 建立 /opt/scripts 並複製 macvlan.sh..."
+# 3. 建立 /opt/scripts 並複製 基本腳本
+echo "📁 建立 /opt/scripts 並複製 基本腳本..."
 mkdir -p /opt/scripts
 cp ./web-tools-demo/scripts/* /opt/scripts/
 chmod +x /opt/scripts/*.sh
