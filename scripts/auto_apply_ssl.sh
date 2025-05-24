@@ -39,6 +39,8 @@ mkdir -p "$CERT_DST"
 echo "🚀 嘗試申請 Let's Encrypt 憑證 for $DOMAIN..."
 docker run --rm -it \
   --name certbot_temp \
+  --network=host \
+  --dns 8.8.8.8 --dns 1.1.1.1 \
   -v "$CERT_DIR":/etc/letsencrypt \
   -v "$CERTBOT_DIR":/var/www/certbot \
   certbot/certbot certonly --webroot \

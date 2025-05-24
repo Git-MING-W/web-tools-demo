@@ -4,7 +4,13 @@ echo "🚀 [部署第二步：安裝 PHP、Docker、Firewall 設定]"
 
 # 1. 安裝 PHP 及模組
 echo "📦 安裝 PHP 及常見模組..."
-yum install -y php php-fpm php-mysqlnd php-cli php-gd php-xml php-mbstring php-common php-process php-intl php-devel php-zip
+#安裝 Remi repo（如果還沒裝過）
+yum install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+#重置並啟用 PHP 8.2 模組
+yum module reset php -y
+yum module enable php:remi-8.2 -y
+#安裝 PHP 8.2 及常用擴充模組
+yum install -y php php-fpm php-mysqlnd php-cli php-gd php-xml php-mbstring php-common php-process php-intl php-devel php-zip php-json
 
 echo "⚙️ 調整 php-fpm 設定：listen port 與 nginx 使用者..."
 
@@ -95,6 +101,7 @@ iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
 #iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 36888 -j ACCEPT
 iptables -A INPUT -j REJECT --reject-with icmp-host-prohibited
 
+bash /opt/scripts/add_macvlan_iptable.sh
 
 echo "💾 儲存 iptables 規則"
 service iptables save

@@ -36,6 +36,9 @@ web-tools-demo/
 │  ├─backup_mysql.sh       # 備份資料庫腳本
 │  ├─only_apply_ssl.sh     # 申請證書腳本
 │  ├─auto_apply_ssl.sh     # 自動化申請證書及替換腳本 
+│  ├─container_net_diagnose.sh # 容器網路環境檢查
+│  ├─container_net_ping.sh # 容器網路測試
+│  ├─add_macvlan_iptable.sh # 添加macvlan防火牆規則
 │  └─show_info.sh          # 顯示系統資訊腳本
 ├─ example                 # 範例目錄 
 │  ├─nginx_sample.conf     # 範例 nginx 設定
@@ -90,6 +93,7 @@ bash ./web-tools-demo/install/deploy_02.sh
 - 安裝 Docker + 舊版 docker-compose CLI
 - 設定 macvlan 腳本與 rc.local 開機啟動
 - 關閉 SELinux、安裝 iptables、停用 firewalld
+- 使用腳本add_macvlan_iptable.sh添加iptables規則
 
 ### 第四步：建立 PXC 容器目錄與網卡設定
 ```bash
@@ -163,7 +167,7 @@ wsrep_cluster_address = gcomm://指向 node01 IP(或其他多節點IP)
 ```
 ⚠️ 若自行設定 node.cnf，請確保容器有對應 volume 掛載並 reload 後啟動。
 
-
+---
 📚 後續建議擴充
 - 加入 .env 支援參數集中管理
 - 新增 uninstall.sh 或 deploy_node02.sh
@@ -172,6 +176,8 @@ wsrep_cluster_address = gcomm://指向 node01 IP(或其他多節點IP)
 
 🎬 使用範例截圖 / 示意影片（可放圖片或連結）
 📺 示範影片：https://youtu.be/xxxxxxxxxxx
+
+---
 
 🧑‍🏫 延伸教學與說明文件
 技術教學文章 - 自動備份與通知教學
