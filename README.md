@@ -74,44 +74,13 @@ bash ./web-tools-demo/scripts/show_info.sh
 ```
 確認系統 CPU、RAM、磁碟空間、OS 版本與時區設定。
 
-### 第二步：主機初始化與網頁環境建置
+### 第二步：執行主部署 CLI 腳本
+可以依照順序一步步執行，也可以輸入a直接全部一次執行，<red>請不要跳著順序執行</red>，後續步驟會依賴前方步驟部屬的檔案和環境。
 ```bash
-bash ./web-tools-demo/install/deploy_01.sh
+bash ./web-tools-demo/install/install.sh
 ```
-內容包括：
-- 主機名稱設定（互動式輸入）
-- 設定時區為台北
-- 調整系統限制與核心參數（ulimit/sysctl）
-- 安裝 Nginx 與首頁
 
-### 第三步：安裝 PHP、Docker 與系統服務設定
-```bash
-bash ./web-tools-demo/install/deploy_02.sh
-```
-- 安裝 PHP + 常用模組，設定為 nginx 使用
-- 啟用 PHP-FPM 並開放 port 9000
-- 安裝 Docker + 舊版 docker-compose CLI
-- 設定 macvlan 腳本與 rc.local 開機啟動
-- 關閉 SELinux、安裝 iptables、停用 firewalld
-- 使用腳本add_macvlan_iptable.sh添加iptables規則
-
-### 第四步：建立 PXC 容器目錄與網卡設定
-```bash
-bash ./web-tools-demo/install/deploy_03.sh
-```
-- 建立 /opt/pxc01 及目錄結構
-- 複製 docker-compose.yml 並替換實體網卡變數
-- 執行 macvlan 腳本並建立 VLAN0001 網卡
-- 顯示 docker network 狀態與確認容器網路
-
-### 第五步：啟動容器與初步健康檢查
-```bash
-bash ./web-tools-demo/install/deploy_04.sh
-```
-- 使用 docker-compose 啟動 MySQL 容器
-- 顯示目前容器狀態與 logs 檢查（含 wsrep 狀態）
-
-### 第六步：重新啟動服務器與清理部屬腳本
+### 第三步：重新啟動服務器與清理部屬腳本
 ```bash
 rm -rf /root/web-tools-demo
 reboot
